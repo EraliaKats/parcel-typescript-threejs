@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Boilerplate Parcel + TypeScript + ThreeJs",
   "scripts": {
+    "init": "tsc --init",
     "start": "npm run clean && parcel src/index.html",
     "build": "npm run clean && parcel build src/index.html --public-url ./",
     "clean": "rimraf ./dist ./.cache"
@@ -16,11 +17,19 @@
   "author": "Adrián Pucheta <pucheta.adrian@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "parcel-bundler": "^1.12.3",
-    "rimraf": "^3.0.0",
-    "typescript": "^3.6.3"
+    "parcel-bundler": "^1.12.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.6.4"
   },
   "dependencies": {
-    "three": "^0.108.0"
-  }
+    "@types/three": "^0.140.0",
+    "three": "^0.140.0"
+  },
+  "browserslist": [
+    "last 3 and_chr versions",
+    "last 3 chrome versions",
+    "last 3 opera versions",
+    "last 3 ios_saf versions",
+    "last 3 safari versions"
+  ]
 }

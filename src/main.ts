@@ -1,9 +1,3 @@
-import AppGame from './AppGame';
+import { setupThreeJSScene } from './AppGame';
 
-let isDevelop:Boolean = true;
-
-const game = new AppGame();
-
-if(isDevelop) {
-  window.game = game;
-}
+setupThreeJSScene();

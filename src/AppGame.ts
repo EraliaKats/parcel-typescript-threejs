@@ -1,75 +1,77 @@
-import { 
-  Scene, 
-  PerspectiveCamera, 
-  WebGLRenderer, 
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
   Mesh,
   CylinderBufferGeometry,
-  MeshBasicMaterial,
-  
+  MeshStandardMaterial,
+  DirectionalLight,
+  AmbientLight,
+
 } from 'three';
 
-export default class AppGame {
+export function setupThreeJSScene() {
 
-  wWidth:number;
-  wHeight:number;
-
-  scene:Scene;
-  camera:PerspectiveCamera;
-  renderer:WebGLRenderer;
-
-  cube:Mesh;
-
-  get aspect (){
-    return this.wWidth / this.wHeight;
+  function getAspect() {
+    return wWidth / wHeight;
   }
 
-  constructor() {
-    this.wWidth  = window.innerWidth;
-    this.wHeight = window.innerHeight;
+  let wWidth: number = window.innerWidth;
+  let wHeight: number = window.innerHeight;
 
-    // create Scene
-    this.scene = new Scene();
+  let scene = new Scene();
 
-    // create Camera
-    this.camera = new PerspectiveCamera(75, this.aspect, 0.1, 1000);
-    this.camera.position.z = 50;
+  //camera
+  let camera: PerspectiveCamera = new PerspectiveCamera(75, getAspect(), 0.1, 1000);
+  camera.position.z = 50;
 
-    const geometry = new CylinderBufferGeometry(5, 5, 20, 8);
-    const material = new MeshBasicMaterial({
-      color: 0xffff00
-    });
+  //renderer
 
-    this.cube = new Mesh(geometry, material);
-    this.cube.position.z = 5;
+  let renderer: WebGLRenderer = new WebGLRenderer();
+  renderer.setSize(wWidth, wHeight);
+  document.body.appendChild(renderer.domElement);
 
-    this.scene.add(this.cube);
+  // add Events Global
+  //TODO: fixup
+  window.addEventListener('resize', onWindowResize, false);
+  function onWindowResize() {
+    wWidth = window.innerWidth;
+    wHeight = window.innerHeight;
 
-    this.renderer = new WebGLRenderer();
-    this.renderer.setSize( this.wWidth, this.wHeight );
-    document.body.appendChild( this.renderer.domElement );
+    camera.aspect = getAspect();
+    camera.updateProjectionMatrix();
 
-    // add Events Global
-    window.addEventListener( 'resize', this.onWindowResize.bind(this), false);
-
-    this.animate();
+    renderer.setSize(wWidth, wHeight);
   }
 
-  onWindowResize() {
-    this.wWidth  = window.innerWidth;
-    this.wHeight = window.innerHeight;
 
-    this.camera.aspect = this.aspect;
-    this.camera.updateProjectionMatrix();
+  //lights
+  const dirLight1 = new DirectionalLight();
+  scene.add(dirLight1);
+  const dirLight2 = new DirectionalLight();
+  dirLight2.position.set(-5, 2, -2);
+  scene.add(dirLight2);
+  const light = new AmbientLight(0x404040); // soft white light
+  scene.add(light);
 
-    this.renderer.setSize(this.wWidth, this.wHeight);
-  }
+  //shape(s)
+  const geometry = new CylinderBufferGeometry(5, 5, 20, 8);
+  const material = new MeshStandardMaterial({
+    color: 0xff00ff
+  });
 
-  animate() {
-    this.cube.rotation.y += 0.01;
-    this.cube.rotation.x += 0.02;
+  let myShape: Mesh = new Mesh(geometry, material);
+  myShape.position.z = 5;
+  scene.add(myShape);
 
-    this.renderer.render(this.scene, this.camera);
+  animate();
 
-    requestAnimationFrame(this.animate.bind(this));
+  function animate() {
+    myShape.rotation.y += 0.01;
+    myShape.rotation.x += 0.02;
+
+    renderer.render(scene, camera);
+
+    requestAnimationFrame(animate);
   }
 }
